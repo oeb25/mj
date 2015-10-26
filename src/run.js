@@ -24,9 +24,8 @@ export default function run(App) {
     try {
       dispatch({ type: TICK })
 
-      setTimeout(() => tick(), 1000/60)
+      setTimeout(() => tick(), 1000 / 60)
     } catch(e) {
-      console.timeEnd("WUHU!")
       console.error('Stopping game reason below!')
       throw e
     }

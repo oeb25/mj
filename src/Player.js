@@ -46,7 +46,7 @@ const update = (state = create(), action) => {
         right: move.x > 0 ? true : move.x < 0 ? false : state.right,
         animate: keyboard.x || (move.y > GRAVITY),
         onGround: false,
-        velx: state.velx - (state.velx - keyboard.x * 3) * 0.02
+        velx: state.velx - (state.velx - keyboard.x * 3) * 0.1
       }
     case c.BLOCKED:
       if (action.dir.y)

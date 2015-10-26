@@ -38,6 +38,8 @@
     "webpack-dev-server": "^1.12.1"
   },
   "dependencies": {
+    "firebase": "^2.3.1",
+    "peerjs": "^0.3.14",
     "ramda": "^0.18.0",
     "slicr": "^0.1.1",
     "tast": "0.0.4"
