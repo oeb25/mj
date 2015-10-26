@@ -6,7 +6,7 @@ const update = (state = { x: 0, y: 0, width: 32, height: 5, type: c.SOLID }) => 
 
 const view = ({ state }) => {
   return <c>
-    <rect {...state} color="red" />
+    <rect {...state} color="gray" />
   </c>
 }
 

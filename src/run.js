@@ -16,19 +16,15 @@ export default function run(App) {
   const dispatch = action => {
     if (App.update)
       state = App.update(state, action)
-
-    Render(<App state={state} dispatch={dispatch} />, ctx)
   }
 
   dispatch({ type: 'INIT' })
-
-  console.time("WUHU!")
 
   const tick = () => {
     try {
       dispatch({ type: TICK })
 
-      requestAnimationFrame(() => tick())
+      setTimeout(() => tick(), 1000/60)
     } catch(e) {
       console.timeEnd("WUHU!")
       console.error('Stopping game reason below!')
@@ -36,5 +32,12 @@ export default function run(App) {
     }
   }
 
+  const render = () => {
+    requestAnimationFrame(render)
+
+    Render(<App state={state} dispatch={dispatch} />, ctx)
+  }
+
   tick()
+  render()
 }

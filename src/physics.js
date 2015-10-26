@@ -1,6 +1,6 @@
 import { filter, curry, head, __ } from 'ramda'
 
-const sign = Math.sing || (a => a / Math.abs(a))
+const sign = Math.sign || (a => a / Math.abs(a))
 
 export const move = (state, amt, others) => {
   let tryX = {

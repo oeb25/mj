@@ -1,4 +1,4 @@
 import run from './run'
-import * as Game from './game'
+import * as Game from './Game'
 
 run(Game)

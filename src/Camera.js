@@ -7,13 +7,16 @@ const view = ({ state }, children) => {
   </c>
 }
 
+const width = window.innerWidth
+const height = window.innerHeight
+
 const update = (state = {x: 0, y: 0}, action) => {
 
   switch (action.type) {
     case 'TICK':
       return {
-        x: -action.x + 1280 / 2,
-        y: -action.y + 635 / 2
+        x: -action.x + width / 2,
+        y: -action.y + height / 2
       };
   }
 

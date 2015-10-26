@@ -27,7 +27,7 @@ export default function Render(state, ctx) {
       thing[2].map(render(newOps))
   }
 
-  ctx.fillStyle = 'white'
+  ctx.fillStyle = '#77abea'
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.width)
   ctx.fillStyle = 'black'
 

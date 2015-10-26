@@ -5,6 +5,7 @@ import { filter, map, prop, not, curry, equals, compose, __ } from 'ramda'
 import Player from './Player'
 import Solid, {create as createSolid} from './Solid'
 import Collectable, {create as createCollectable} from './Collectable'
+import Particle, {create as createParticle} from './Particle'
 import Camera from './Camera'
 import physics from './physics'
 import * as c from './constants'
@@ -30,19 +31,14 @@ const updateChild = ({ id, kind, state }, others, action, type = TICK, actions) 
     newState = { ...newState, x, y };
 
     if (blocked.x || blocked.y) {
-      newState = hit.filter(a => a)
-        .map(a => ({ type: COLLIDEWITH(a.type), dir: blocked }))
-        .reduce(kind.update, newState)
+      newState = [
+        ...hit.filter(a => a)
+          .map(a => ({ type: COLLIDEWITH(a.type), dir: blocked })),
+        { type: c.BLOCKED, dir: blocked }
+      ].reduce(kind.update, newState)
     }
 
     if (!newState) return false
-
-
-    if (blocked.y == 1)
-      return updateChild({
-        id, kind,
-        state: newState
-      }, others, action, c.BLOCKEDDOWN, actions)
   }
 
   return {
@@ -94,8 +90,56 @@ const update = (state = { children: [], id: 0, camera: Camera.create(0, 0) }, ac
       return [
         { type: ADDCHILD, kind: Player },
         { type: ADDCHILD, kind: createSolid(0, 600, 500, 50) },
+        { type: ADDCHILD, kind: createSolid(-100, 0, 100, 600) },
         { type: ADDCHILD, kind: createSolid(100, 550, 62, 25) },
-        { type: ADDCHILD, kind: createCollectable(110, 520) },
+        { type: ADDCHILD, kind: createSolid(500, 0, 100, 600) },
+        //{ type: ADDCHILD, kind: createCollectable(110, 520) },
+        /*
+        { type: ADDCHILD, kind: createParticle(110, 520) },
+        { type: ADDCHILD, kind: createParticle(112, 520) },
+        { type: ADDCHILD, kind: createParticle(114, 520) },
+        { type: ADDCHILD, kind: createParticle(116, 520) },
+        { type: ADDCHILD, kind: createParticle(118, 520) },
+        { type: ADDCHILD, kind: createParticle(120, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        { type: ADDCHILD, kind: createParticle(122, 520) },
+        */
       ].reduce(update, state)
   }
 
