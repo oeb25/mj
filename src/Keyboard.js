@@ -34,11 +34,12 @@ listen(id => {
 
 let touch = { x: 0, y: 0, down: false }
 
-const update = () => {
+const update = (last = keyboard.save()) => {
   const state = keyboard.save()
 
   return {
     ...state,
+    last: last || {},
     down: a => state.down(a),
     up: a => state.up(a),
     x: touch.down ? touch.x : (state.down(controles.right) && 1) - (state.down(controles.left) && 1) || 0,

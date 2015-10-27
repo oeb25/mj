@@ -35,7 +35,7 @@ const updateChild = ({ id, kind, state }, others, action, type = TICK, actions) 
         ...hit.filter(a => a)
           .map(a => ({ type: COLLIDEWITH(a.type), dir: blocked })),
         { type: c.BLOCKED, dir: blocked }
-      ].reduce(kind.update, newState)
+      ].reduce((state, action) => kind.update(state, action, action => actions.push(action)), newState)
     }
 
     if (!newState) return false
@@ -70,7 +70,7 @@ const update = (state = { children: [], id: 0, camera: Camera.create(0, 0) }, ac
       } : a => a
 
       return {
-        ...state,
+        ...actions.reduce(update, state),
         camera: Camera.update(state.camera, {
           type: TICK,
           x: state.children[0].state.x,
@@ -141,6 +141,9 @@ const update = (state = { children: [], id: 0, camera: Camera.create(0, 0) }, ac
         { type: ADDCHILD, kind: createParticle(122, 520) },
         */
       ].reduce(update, state)
+    case c.SPAWNPARTICLES:
+
+      return update(state, { type: ADDCHILD, kind: createParticle(action.x, action.y) })
   }
 
   return state

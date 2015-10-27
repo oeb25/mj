@@ -15,6 +15,14 @@ export default function Render(state, ctx) {
   ops[x] = 0
   ops[y] = 0
 
+  const p = false
+
+  ctx['imageSmoothingEnabled'] = p;
+  ctx['mozImageSmoothingEnabled'] = p;
+  ctx['oImageSmoothingEnabled'] = p;
+  ctx['webkitImageSmoothingEnabled'] = p;
+  ctx['msImageSmoothingEnabled'] = p;
+
   const render = ops => thing => {
     const newOps = [
       ops[x] + (thing[1] ? (thing[1]['x'] || 0) : 0),

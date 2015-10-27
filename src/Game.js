@@ -22,7 +22,7 @@ export const update = (state = create(), action) => {
 
   switch (action.type) {
     case 'TICK':
-      const keyboard = Keyboard.update()
+      const keyboard = Keyboard.update(state.keyboard)
 
       if (keyboard.down(KEYS.V)) {
         return (state.prev.prev || state.prev) || state
