@@ -28,6 +28,8 @@ export const update = (state = create(), action) => {
         return (state.prev.prev || state.prev) || state
       }
 
+      if (state && state.world && state.world.children[0].state.y > 1000) return create()
+
       return { ...state,
         prev: i % 1 == 0 ? state : state.prev,
         keyboard,

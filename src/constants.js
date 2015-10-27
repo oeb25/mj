@@ -4,6 +4,7 @@ export const COLLECTABLE = 'COLLECTABLE'
 export const PARTICLE = 'PARTICLE'
 
 export const TICK = 'TICK'
+export const NOTIFY = 'NOTIFY'
 export const SPAWNPARTICLES = 'SPAWNPARTICLES'
 
 export const BLOCKED = 'BLOCKED'

@@ -6,6 +6,8 @@ export default function run(App) {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
 
+  canvas.id = 'game'
+
   canvas.width = window.innerWidth || 800
   canvas.height = window.innerHeight || 600
 
@@ -21,20 +23,29 @@ export default function run(App) {
   dispatch({ type: 'INIT' })
 
   const tick = () => {
-    try {
-      dispatch({ type: TICK })
+      try {
+        dispatch({ type: TICK })
 
-      setTimeout(() => tick(), 1000 / 60)
-    } catch(e) {
-      console.error('Stopping game reason below!')
-      throw e
-    }
+        setTimeout(() => tick(), 1000 / 60)
+      } catch(e) {
+        console.error('Stopping game reason below!')
+        throw e
+      }
   }
 
-  const render = () => {
-    requestAnimationFrame(render)
+  let stop = false
 
-    Render(<App state={state} dispatch={dispatch} />, ctx)
+  const render = () => {
+    try {
+      if (!stop)
+        requestAnimationFrame(render)
+
+      Render(<App state={state} dispatch={dispatch} />, ctx)
+    } catch(e) {
+      stop = true
+      console.error('Render stopping game reason below!')
+      throw e
+    }
   }
 
   tick()

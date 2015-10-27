@@ -14,11 +14,16 @@ const ADDCHILD = 'ADDCHILD'
 const INIT = 'INIT'
 const TICK = 'TICK'
 
-const updateChild = ({ id, kind, state }, others, action, type = TICK, actions) => {
+const updateChild = ({ id, kind, state }, others, action, type = TICK) => {
   let newState = kind.update(state, {
     type,
     keyboard: action.keyboard
   })
+  if (!newState) return false
+
+  let actions
+
+  [newState, actions = []] = newState
 
   if (newState.move) {
     const { x, y, blocked, hit } = physics.move(newState, newState.move, others.map(prop('state')),)
@@ -26,73 +31,106 @@ const updateChild = ({ id, kind, state }, others, action, type = TICK, actions) 
     let g = hit.filter(a => a)[0]
 
     if (g)
-      actions = [others.filter(a => a.state == g)[0].id, { type: COLLIDEWITH(state.type) }]
+      actions = [...actions, {
+        type: c.NOTIFY,
+        id: others.filter(a => a.state == g)[0].id,
+        action: { type: COLLIDEWITH(state.type) }
+      }]
 
     newState = { ...newState, x, y };
 
     if (blocked.x || blocked.y) {
-      newState = [
+      [newState, actions] = [
         ...hit.filter(a => a)
           .map(a => ({ type: COLLIDEWITH(a.type), dir: blocked })),
         { type: c.BLOCKED, dir: blocked }
-      ].reduce((state, action) => kind.update(state, action, action => actions.push(action)), newState)
+      ].reduce(([state, actions], action) => {
+        const [s, a = []] = kind.update(state, action)
+
+        return [s, [...actions, ...a]]
+      }, [newState, actions])
     }
 
     if (!newState) return false
   }
 
   return {
-    state: {
-      kind, id,
-      state: newState
-    },
+    kind, id,
+    state: newState,
     actions
   }
 }
 
 const updateChildren = (action, children) => {
-  return children.map(child => updateChild(child, children.filter(a => a !== child), action))
+  return children.map(child =>
+    updateChild(child, children.filter(a => {
+      if (a === child)
+        return false
+
+      if (child.state.ignore) {
+
+        return child.state.ignore.indexOf(a.state.type) == -1
+      }
+
+      return true
+    })
+    , action))
+}
+
+const ACTIONS = {
+  [c.NOTIFY]: (state, action) => {
+    const child = state.children.filter(child => child.id === action.id)[0]
+    const others = state.children.filter(child => child.id !== action.id)
+
+    return {
+      ...state,
+      children: [
+        ...others,
+        { ...child, state: child.kind.update(child.state, action.id)[0] }
+      ].sort((a, b) => a.id - b.id)
+    }
+  }
 }
 
 const update = (state = { children: [], id: 0, camera: Camera.create(0, 0) }, action) => {
   switch (action.type) {
     case TICK:
-      const children = updateChildren(action, state.children).filter(a => a)
+      const children = updateChildren(action, state.children).filter(a => a.state)
 
       const selectActions = prop('actions')
-      const actions = children.filter(selectActions).map(selectActions)
+      const actions = children.filter(selectActions).map(selectActions).reduce((a, b) => a.concat(b))
 
-      let ffs = actions.length ? child => {
-        const out = actions.reduce((child, [id, action]) =>
-          child.id !== id ? child : { ...child, state: child.kind.update(child.state, action) }, child)
-
-        return out
-      } : a => a
-
-      return {
-        ...actions.reduce(update, state),
+      const newState = {
+        ...state,
         camera: Camera.update(state.camera, {
           type: TICK,
           x: state.children[0].state.x,
           y: state.children[0].state.y
         }),
-        children: children.map(compose(ffs, prop('state')))
+        children: children
       }
+
+      const out = actions.reduce(update, newState)
+
+      return out
+    case c.NOTIFY:
+      return ACTIONS[c.NOTIFY](state, action)
     case ADDCHILD:
       const { kind } = action
       const id = state.id + 1
       const child = {
         kind, id,
-        state: kind.update(void(0), { type: INIT })
+        state: kind.update(void(0), { type: INIT })[0]
       }
+
       return { ...state, id, children: [...state.children, child] }
     case INIT:
       return [
         { type: ADDCHILD, kind: Player },
-        { type: ADDCHILD, kind: createSolid(0, 600, 500, 50) },
-        { type: ADDCHILD, kind: createSolid(-100, 0, 100, 600) },
-        { type: ADDCHILD, kind: createSolid(100, 550, 62, 25) },
-        { type: ADDCHILD, kind: createSolid(500, 0, 100, 600) },
+        { type: ADDCHILD, kind: createSolid(400, 600, 200, 100) },
+        { type: ADDCHILD, kind: createSolid(-100, 400, 100, 20) },
+        //{ type: ADDCHILD, kind: createSolid(100, 550, 62, 25) },
+        { type: ADDCHILD, kind: createSolid(500, 0, 100, 601) },
         //{ type: ADDCHILD, kind: createCollectable(110, 520) },
         /*
         { type: ADDCHILD, kind: createParticle(110, 520) },
@@ -142,7 +180,6 @@ const update = (state = { children: [], id: 0, camera: Camera.create(0, 0) }, ac
         */
       ].reduce(update, state)
     case c.SPAWNPARTICLES:
-
       return update(state, { type: ADDCHILD, kind: createParticle(action.x, action.y) })
   }
 

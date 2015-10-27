@@ -22,7 +22,7 @@ const transition = (props, mm) => {
 
         //console.log(state.current[a] + (target[a] - state.current[a]) * 0.2);
 
-        props.map(a => current[a] = state.current[a] + (target[a] - state.current[a]) * 0.05)
+        props.map(a => current[a] = state.current[a] + (target[a] - state.current[a]) * 0.2)
 
         return { current, target }
     }

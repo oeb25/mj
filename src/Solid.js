@@ -12,7 +12,7 @@ const view = ({ state }) => {
 
 export const create = (x = 0, y = 0, width = 32, height = 32) =>
   collideable({
-    update(state = {x, y, width, height}) { return { ...update(void(0)), ...state } },
+    update(state = {x, y, width, height}) { return [{ ...update(void(0)), ...state }] },
     view
   })
 

@@ -6,8 +6,10 @@ const collideable = a => ({
 
     if (!out) return out
 
-    if (e(out.x) || e(out.y) || e(out.width) || e(out.height)) {
-      console.error('MISSING EITHER OF [x, y, width, height] ON CHILD', state, 'WITH TYPE', a)
+    const [wuhu] = out
+
+    if (e(wuhu.x) || e(wuhu.y) || e(wuhu.width) || e(wuhu.height)) {
+      console.error('MISSING EITHER OF [x, y, width, height] ON CHILD', wuhu, 'WITH TYPE', a)
     }
 
     return out
