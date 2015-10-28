@@ -85,7 +85,6 @@ const update = (state = create(), action) => {
 
       if (action.dir.y) {
         //dispatch({ type: c.SPAWNPARTICLES, amt: 10, x: state.x, y: state.y - 50 })
-        console.log(Math.max(Math.floor(state.move.y - 20), 0));
 
         let plz = Math.max(Math.floor(state.move.y - 20), 0)
 
@@ -122,7 +121,7 @@ const view = ({ state }) => {
   const { right, animate, onGround, move } = state
   const left = !right
 
-  return <c x={state.x - 15} y={state.y}>
+  let anim = (
     <Animation frames={slice(juice, { width: 20, height: 20 })} scale={3} delay={100} conditions={[
       [!onGround && move.y > 0.2, [1, 2]],
       // move right
@@ -134,6 +133,12 @@ const view = ({ state }) => {
       // left
       [left, [0, 1]]
     ]}/>
+  )
+
+  let stat = (<img src={juice} scale={0.14}/>)
+
+  return <c x={state.x - 15} y={state.y}>
+    {anim}
   </c>
 }
 

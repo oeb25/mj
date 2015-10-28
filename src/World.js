@@ -112,6 +112,8 @@ const update = (state = { children: [], id: 0, camera: Camera.create(0, 0) }, ac
 
       const out = actions.reduce(update, newState)
 
+      if (out.children[0].state.y > 1000) return update(void(0), { type: INIT })
+
       return out
     case c.NOTIFY:
       return ACTIONS[c.NOTIFY](state, action)

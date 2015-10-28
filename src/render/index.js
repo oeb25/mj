@@ -1,11 +1,12 @@
 import img from './img'
 import rect from './rect'
+import circle from './circle'
 
 const x = 0
 const y = 1
 
 const handlers = {
-  img, rect,
+  img, rect, circle,
   c() {}
 }
 

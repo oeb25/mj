@@ -10,6 +10,7 @@ export default function img(ctx, { src, scale = 1 }, [ x, y ]) {
     cache[src] = new Image()
     cache[src].src = src
   }
+  const img = cache[src]
 
-  ctx.drawImage(cache[src], x, y)
+  ctx.drawImage(img, x, y, img.width * scale, img.height * scale)
 }
