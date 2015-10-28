@@ -6,6 +6,8 @@ import texture from '../assets/box.png'
 import juice from '../assets/juice.png'
 import { slice } from './spritesheet'
 import * as c from './constants'
+import squez from '../assets/sfx/squez_1.ogg'
+import Sound from './Sound'
 
 const GRAVITY = 0.6
 const JUMPINGPOWER = -16
@@ -42,9 +44,16 @@ const update = (state = create(), action) => {
 
       let velx = 0
 
+      if (state.isGliding && state.move.y > 1) {
+        Sound.play('slide')
+      } else {
+        Sound.stop('slide')
+      }
+
       if (keyboard.jump && !state.jumpWasDown) {
         if (state.onGround && jumps > 0) {
           vel = JUMPINGPOWER
+          Sound.play('suu')
           jumps = jumps - 1
         } else {
           vel = state.vel + GRAVITY
@@ -52,6 +61,7 @@ const update = (state = create(), action) => {
 
         if (state.isGliding && state.jumps > 0) {
           vel = JUMPINGPOWER
+          Sound.play('suu')
           velx = state.force * JUMPINGPOWER * 1.5
           jumps = jumps - 1
         }
@@ -88,6 +98,10 @@ const update = (state = create(), action) => {
 
         let plz = Math.max(Math.floor(state.move.y - 20), 0)
 
+        if (plz > 0) {
+          Sound.play('squez')
+        }
+
         newState = [
           { ...newState[0], vel: GRAVITY, move: { x: 0, y: 0 }, onGround: true },
           plz > 0 ? new Array(plz * 3).join('.').split('.').map(() =>
@@ -123,7 +137,11 @@ const view = ({ state }) => {
 
   let anim = (
     <Animation frames={slice(juice, { width: 20, height: 20 })} scale={3} delay={100} conditions={[
-      [!onGround && move.y > 0.2, [1, 2]],
+      [state.isGliding && move.y > 0, move.x > 0 ? [18, 2] : [16, 2]],
+
+      [!onGround && move.y > 15.9, [12, 2]],
+      [!onGround && move.y > 0.2, [14, 2]],
+      [!onGround && move.y < 0.2, [1, 2]],
       // move right
       [animate && right, [4, 4]],
       // move left

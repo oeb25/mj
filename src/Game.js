@@ -2,6 +2,9 @@ import { component } from './render'
 import { KEYS } from 'tast'
 import Keyboard from './Keyboard'
 import World from './World'
+//import start from '../levels/start'
+
+//console.log(start);
 
 const init = a => a.update(void(0), { type: 'INIT' })
 

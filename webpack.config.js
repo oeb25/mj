@@ -22,7 +22,7 @@ module.exports = {
       loaders: ['babel'],
       include: path.join(__dirname, 'src')
     },{
-      test: /\.(png|jpg)$/,
+      test: /\.(png|jpg|ogg|mp3)$/,
       loaders: ['file'],
       include: path.join(__dirname, 'assets')
     }]

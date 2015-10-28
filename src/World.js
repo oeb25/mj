@@ -9,6 +9,7 @@ import Particle, {create as createParticle} from './Particle'
 import Camera from './Camera'
 import physics from './physics'
 import * as c from './constants'
+import Sound from './Sound'
 
 const ADDCHILD = 'ADDCHILD'
 const INIT = 'INIT'
@@ -112,7 +113,10 @@ const update = (state = { children: [], id: 0, camera: Camera.create(0, 0) }, ac
 
       const out = actions.reduce(update, newState)
 
-      if (out.children[0].state.y > 1000) return update(void(0), { type: INIT })
+      if (out.children[0].state.y > 1000) {
+        Sound.play('die')
+        return update(void(0), { type: INIT })
+      }
 
       return out
     case c.NOTIFY:
@@ -131,58 +135,17 @@ const update = (state = { children: [], id: 0, camera: Camera.create(0, 0) }, ac
         { type: ADDCHILD, kind: Player },
         { type: ADDCHILD, kind: createSolid(400, 600, 200, 100) },
         { type: ADDCHILD, kind: createSolid(-100, 400, 100, 20) },
-        //{ type: ADDCHILD, kind: createSolid(100, 550, 62, 25) },
         { type: ADDCHILD, kind: createSolid(500, 0, 100, 601) },
-        //{ type: ADDCHILD, kind: createCollectable(110, 520) },
-        /*
-        { type: ADDCHILD, kind: createParticle(110, 520) },
-        { type: ADDCHILD, kind: createParticle(112, 520) },
-        { type: ADDCHILD, kind: createParticle(114, 520) },
-        { type: ADDCHILD, kind: createParticle(116, 520) },
-        { type: ADDCHILD, kind: createParticle(118, 520) },
-        { type: ADDCHILD, kind: createParticle(120, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        { type: ADDCHILD, kind: createParticle(122, 520) },
-        */
       ].reduce(update, state)
     case c.SPAWNPARTICLES:
       return update(state, { type: ADDCHILD, kind: createParticle(action.x, action.y) })
+    case 'LOAD':
+      const { solids, spawn } = action
+
+      return [
+        { type: ADDCHILD, kind: Player },
+        ...solids.map(([x, y, w, h]) => ({ type: ADDCHILD, kind: createSolid(x, y, w, h) }))
+      ].reduce(update, state)
   }
 
   return state
