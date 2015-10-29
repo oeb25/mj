@@ -89,7 +89,20 @@ const ACTIONS = {
       children: [
         ...others,
         { ...child, state: child.kind.update(child.state, action.id)[0] }
-      ].sort((a, b) => a.id - b.id)
+      ].sort((a, b) => {
+        if (a.state.zindex || b.state.zindex) {
+          if (a.state.zindex && b.state.zindex) {
+            return a.state.zindex - b.state.zindex
+          }
+
+          if (a.state.zindex)
+            return a.state.zindex
+          if (b.state.zindex)
+            return -b.state.zindex
+        }
+
+        return a.id - b.id
+      })
     }
   }
 }
@@ -105,19 +118,21 @@ const update = (state = { children: [], triggers: [], id: 0, camera: Camera.crea
         .map(selectActions)
         .reduce((a, b) => a.concat(b))
 
+      const player = children.filter(child => child.kind == Player)[0]
+
       const newState = {
         ...state,
         camera: Camera.update(state.camera, {
           type: TICK,
-          x: state.children[0].state.x,
-          y: state.children[0].state.y
+          x: player.state.x,
+          y: player.state.y
         }),
         children: children
       }
 
       const out = actions.reduce(update, newState)
 
-      if (out.children[0].state.y > 1000) {
+      if (out.children[0].state.vel > 150) {
         Sound.play('die')
         return update(void(0), { type: 'LOAD', name: 'start' })
       }

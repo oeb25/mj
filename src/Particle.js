@@ -11,7 +11,7 @@ const view = ({ state }) => {
   const size = SIZE - SIZE * (state.age / MAXAGE)
 
   return <c x={state.x} y={state.y}>
-    <circle radius={size} color="#f6d747" />
+    <circle radius={size} color="#edbc28" />
   </c>
 }
 
@@ -23,15 +23,16 @@ export const create = (x = 0, y = 0) => {
 
   const update = (state = {
     x, y,
-    width: 5,
-    height: 5,
+    width: 0,
+    height: 0,
     type: c.PARTICLE,
     vel: {
       x: Math.cos(random) * 10 * speed,
       y: Math.sin(random) * 10 * speed
     },
-    ignore: [c.PARTICLE, c.PLAYERS],
-    age: 0
+    ignore: [c.PARTICLE, c.PLAYER],
+    age: MAXAGE * Math.random(),
+    zindex: (Math.random() * 4) -3
   }, action) => {
     switch (action.type) {
       case c.TICK:

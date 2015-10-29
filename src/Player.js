@@ -37,6 +37,7 @@ const update = (state = create(), action) => {
   switch (action.type) {
     case c.TICK:
       const { keyboard } = action
+      let actions = []
 
       let vel = state.vel
       let jumps = state.jumps
@@ -45,6 +46,7 @@ const update = (state = create(), action) => {
 
       if (state.isGliding && state.move.y > 1) {
         Sound.play('slide')
+        actions.push({ type: c.SPAWNPARTICLES, x: state.x + (state.move.x > 0 ? state.width : 0), y: state.y + state.height / 2 })
       } else {
         Sound.stop('slide')
       }
@@ -53,6 +55,13 @@ const update = (state = create(), action) => {
         if (state.onGround && jumps > 0) {
           vel = JUMPINGPOWER
           Sound.play('suu')
+          actions.push({ type: c.SPAWNPARTICLES, x: state.x + state.width / 2, y: state.y + state.height / 2 })
+          actions.push({ type: c.SPAWNPARTICLES, x: state.x + state.width / 2, y: state.y + state.height / 2 })
+          actions.push({ type: c.SPAWNPARTICLES, x: state.x + state.width / 2, y: state.y + state.height / 2 })
+          actions.push({ type: c.SPAWNPARTICLES, x: state.x + state.width / 2, y: state.y + state.height / 2 })
+          actions.push({ type: c.SPAWNPARTICLES, x: state.x + state.width / 2, y: state.y + state.height / 2 })
+          actions.push({ type: c.SPAWNPARTICLES, x: state.x + state.width / 2, y: state.y + state.height / 2 })
+          actions.push({ type: c.SPAWNPARTICLES, x: state.x + state.width / 2, y: state.y + state.height / 2 })
           jumps = jumps - 1
         } else {
           vel = state.vel + GRAVITY
@@ -61,6 +70,13 @@ const update = (state = create(), action) => {
         if (state.isGliding && state.jumps > 0) {
           vel = JUMPINGPOWER
           Sound.play('suu')
+          actions.push({ type: c.SPAWNPARTICLES, x: state.x + state.width / 2, y: state.y + state.height / 2 })
+          actions.push({ type: c.SPAWNPARTICLES, x: state.x + state.width / 2, y: state.y + state.height / 2 })
+          actions.push({ type: c.SPAWNPARTICLES, x: state.x + state.width / 2, y: state.y + state.height / 2 })
+          actions.push({ type: c.SPAWNPARTICLES, x: state.x + state.width / 2, y: state.y + state.height / 2 })
+          actions.push({ type: c.SPAWNPARTICLES, x: state.x + state.width / 2, y: state.y + state.height / 2 })
+          actions.push({ type: c.SPAWNPARTICLES, x: state.x + state.width / 2, y: state.y + state.height / 2 })
+          actions.push({ type: c.SPAWNPARTICLES, x: state.x + state.width / 2, y: state.y + state.height / 2 })
           velx = state.force * JUMPINGPOWER * 1.5
           jumps = jumps - 1
         }
@@ -88,14 +104,14 @@ const update = (state = create(), action) => {
         isGliding: false,
         velx: velx || state.velx - (state.velx - keyboard.x * SPEED) * DRAG,
         jumps
-      }]
+      }, actions]
     case c.BLOCKED:
       let newState = [state]
 
       if (action.dir.y) {
         //dispatch({ type: c.SPAWNPARTICLES, amt: 10, x: state.x, y: state.y - 50 })
 
-        let plz = Math.max(Math.floor(state.move.y - 20), 0)
+        let plz = Math.max(Math.floor(state.move.y - 10), 0)
 
         if (plz > 0) {
           Sound.play('squez')
@@ -103,7 +119,7 @@ const update = (state = create(), action) => {
 
         newState = [
           { ...newState[0], vel: GRAVITY, move: { x: 0, y: 0 }, onGround: true },
-          plz > 0 ? new Array(plz * 3).join('.').split('.').map(() =>
+          plz > 0 ? new Array(plz).join('.').split('.').map(() =>
             ({ type: c.SPAWNPARTICLES, x: state.x + state.width / 2, y: state.y + state.height / 2 })
           ) : []
 
