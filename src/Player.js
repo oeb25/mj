@@ -14,9 +14,8 @@ const JUMPINGPOWER = -16
 const SPEED = 6
 const DRAG = 0.2
 
-const create = () => ({
-  x: 400,
-  y: 100,
+const create = (x = 400, y = 100) => ({
+  x, y,
   width: 30,
   height: 60,
   vel: 0,
@@ -124,6 +123,10 @@ const update = (state = create(), action) => {
       //console.log('collided with that guy ;)')
 
       return [state]
+    case c.INIT:
+      console.log('creating player')
+
+      return [{...state, x: action.x || state.x, y: action.y || state.y }]
     default:
       return [state]
   }

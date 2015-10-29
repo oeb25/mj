@@ -10,6 +10,7 @@ import Camera from './Camera'
 import physics from './physics'
 import * as c from './constants'
 import Sound from './Sound'
+import Level from './Level'
 
 const ADDCHILD = 'ADDCHILD'
 const INIT = 'INIT'
@@ -93,13 +94,16 @@ const ACTIONS = {
   }
 }
 
-const update = (state = { children: [], id: 0, camera: Camera.create(0, 0) }, action) => {
+const update = (state = { children: [], triggers: [], id: 0, camera: Camera.create(0, 0) }, action) => {
   switch (action.type) {
     case TICK:
       const children = updateChildren(action, state.children).filter(a => a.state)
 
       const selectActions = prop('actions')
-      const actions = children.filter(selectActions).map(selectActions).reduce((a, b) => a.concat(b))
+      const actions = children
+        .filter(selectActions)
+        .map(selectActions)
+        .reduce((a, b) => a.concat(b))
 
       const newState = {
         ...state,
@@ -115,18 +119,18 @@ const update = (state = { children: [], id: 0, camera: Camera.create(0, 0) }, ac
 
       if (out.children[0].state.y > 1000) {
         Sound.play('die')
-        return update(void(0), { type: INIT })
+        return update(void(0), { type: 'LOAD', name: 'start' })
       }
 
       return out
     case c.NOTIFY:
       return ACTIONS[c.NOTIFY](state, action)
     case ADDCHILD:
-      const { kind } = action
+      const { kind, x, y } = action
       const id = state.id + 1
       const child = {
         kind, id,
-        state: kind.update(void(0), { type: INIT })[0]
+        state: kind.update(void(0), { type: c.INIT, x, y })[0]
       }
 
       return { ...state, id, children: [...state.children, child] }
@@ -140,10 +144,11 @@ const update = (state = { children: [], id: 0, camera: Camera.create(0, 0) }, ac
     case c.SPAWNPARTICLES:
       return update(state, { type: ADDCHILD, kind: createParticle(action.x, action.y) })
     case 'LOAD':
-      const { solids, spawn } = action
+      const { name } = action
+      const { solids, spawn } = Level.load(name)
 
       return [
-        { type: ADDCHILD, kind: Player },
+        { type: ADDCHILD, kind: Player, x: spawn[0], y: spawn[1] },
         ...solids.map(([x, y, w, h]) => ({ type: ADDCHILD, kind: createSolid(x, y, w, h) }))
       ].reduce(update, state)
   }

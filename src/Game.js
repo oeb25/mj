@@ -2,9 +2,6 @@ import { component } from './render'
 import { KEYS } from 'tast'
 import Keyboard from './Keyboard'
 import World from './World'
-//import start from '../levels/start'
-
-//console.log(start);
 
 const init = a => a.update(void(0), { type: 'INIT' })
 
@@ -13,7 +10,7 @@ let i = 0
 const create = () => {
   return {
     keyboard: init(Keyboard),
-    world: init(World),
+    world: World.update(void(0), { type: 'LOAD', name: 'start' }),
     prev: false
   }
 }
@@ -21,8 +18,6 @@ const create = () => {
 let ticks = []
 
 export const update = (state = create(), action) => {
-  //if (i++ % 100 == 0) console.log(roughSizeOfObject(state) / 1000 / 1000 + 'mb');
-
   switch (action.type) {
     case 'TICK':
       const keyboard = Keyboard.update(state.keyboard)
