@@ -1,7 +1,9 @@
 import start from './start'
+import bounce from './bounce'
 
 const _levels = {
-  start
+  start,
+  bounce
 }
 
 const Levels = {

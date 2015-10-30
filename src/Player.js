@@ -51,6 +51,8 @@ const update = (state = create(), action) => {
         Sound.stop('slide')
       }
 
+      const hmmmmm = (keyboard.crouch ? 2 : 1)
+
       if (keyboard.jump && !state.jumpWasDown) {
         if (state.onGround && jumps > 0) {
           vel = JUMPINGPOWER
@@ -85,7 +87,7 @@ const update = (state = create(), action) => {
           jumps = 3
           vel = GRAVITY
         } else {
-          vel = state.vel + GRAVITY
+          vel = state.vel + hmmmmm * GRAVITY
         }
       }
 
@@ -102,8 +104,9 @@ const update = (state = create(), action) => {
         jumpWasDown: keyboard.jump,
         onGround: false,
         isGliding: false,
-        velx: velx || state.velx - (state.velx - keyboard.x * SPEED) * DRAG,
-        jumps
+        velx: velx || state.velx - (state.velx - keyboard.x * SPEED / hmmmmm) * DRAG,
+        jumps,
+        sit: keyboard.crouch
       }, actions]
     case c.BLOCKED:
       let newState = [state]
@@ -162,9 +165,14 @@ const view = ({ state }) => {
       [!onGround && move.y > 0.2, [14, 2]],
       [!onGround && move.y < 0.2, [1, 2]],
       // move right
+      [state.sit && animate && right, [8, 4]],
+      // move left
+      [state.sit && animate && left, [4, 4]],
+      // move right
       [animate && right, [4, 4]],
       // move left
       [animate && left, [8, 4]],
+      [state.sit, [0, 20]],
       // right
       [right, [0, 1]],
       // left

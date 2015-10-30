@@ -127,7 +127,8 @@ const update = (last = keyboard.save()) => {
     y: touch.down ? touch.y : (state.down(controles.down) && 1) - (state.down(controles.up) && 1) || 0,
     //x: (state.down(controles.right) && 1) - (state.down(controles.left) && 1) || 0,
     //y: (state.down(controles.down) && 1) - (state.down(controles.up) && 1) || 0,
-    jump: touch.amt > 1 || state.down(controles.jump) ? 1 : 0
+    jump: touch.amt > 1 || state.down(controles.jump) ? 1 : 0,
+    crouch: state.down(controles.down) == 1
   }
 }
 

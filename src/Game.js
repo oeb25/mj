@@ -10,7 +10,7 @@ let i = 0
 const create = () => {
   return {
     keyboard: init(Keyboard),
-    world: World.update(void(0), { type: 'LOAD', name: 'start' }),
+    world: World.update(void(0), { type: 'LOAD', name: 'bounce' }),
     prev: false
   }
 }

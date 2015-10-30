@@ -134,7 +134,7 @@ const update = (state = { children: [], triggers: [], id: 0, camera: Camera.crea
 
       if (out.children[0].state.vel > 150) {
         Sound.play('die')
-        return update(void(0), { type: 'LOAD', name: 'start' })
+        return update(void(0), { type: 'LOAD', name: 'bounce' })
       }
 
       return out

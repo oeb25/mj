@@ -20,7 +20,7 @@ const sounds = {
     require('../assets/sfx/slide_1.ogg'),
   ]),
   die: load([
-    // require('../assets/sfx/die.ogg'),
+    require('../assets/sfx/die.ogg'),
   ])
 }
 
