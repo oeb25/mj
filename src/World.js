@@ -1,16 +1,18 @@
-import { component } from './render'
-import { KEYS } from 'tast'
-import { COLLIDEWITH } from './collideable'
-import { filter, map, prop, not, curry, equals, compose, __ } from 'ramda'
-import Player from './Player'
-import Solid, {create as createSolid} from './Solid'
+import * as c from './constants'
+
 import Collectable, {create as createCollectable} from './Collectable'
 import Particle, {create as createParticle} from './Particle'
+import Solid, {create as createSolid} from './Solid'
+import { __, compose, curry, equals, filter, map, not, prop } from 'ramda'
+
+import { COLLIDEWITH } from './collideable'
 import Camera from './Camera'
-import physics from './physics'
-import * as c from './constants'
-import Sound from './Sound'
+import { KEYS } from 'tast'
 import Level from './Level'
+import Player from './Player'
+import Sound from './Sound'
+import { component } from './render'
+import physics from './physics'
 
 const ADDCHILD = 'ADDCHILD'
 const INIT = 'INIT'
@@ -132,7 +134,7 @@ const update = (state = { children: [], triggers: [], id: 0, camera: Camera.crea
 
       const out = actions.reduce(update, newState)
 
-      if (out.children[0].state.vel > 150) {
+      if (out.children[0].state.vel > 50) {
         Sound.play('die')
         return update(void(0), { type: 'LOAD', name: 'bounce' })
       }

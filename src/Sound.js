@@ -1,26 +1,38 @@
+import die from '../assets/sfx/die.ogg'
+import slide_0 from '../assets/sfx/slide_0.mp3'
+import slide_1 from '../assets/sfx/slide_1.ogg'
+import squez_0 from '../assets/sfx/squez_0.mp3'
+import squez_1 from '../assets/sfx/squez_1.ogg'
+import squez_2 from '../assets/sfx/squez_2.ogg'
+import squez_3 from '../assets/sfx/squez_3.ogg'
+import suu_0 from '../assets/sfx/suu_0.mp3'
+import suu_1 from '../assets/sfx/suu_1.ogg'
+import suu_2 from '../assets/sfx/suu_2.ogg'
+import suu_3 from '../assets/sfx/suu_3.ogg'
+
 const PATH = '../asstes/sfx/'
 
 const load = files => files.map(url => new Audio(url))
 
 const sounds = {
   squez: load([
-    require('../assets/sfx/squez_1.ogg'),
-    require('../assets/sfx/squez_2.ogg'),
-    require('../assets/sfx/squez_3.ogg'),
-    // require('../assets/sfx/squez_0.mp3')
+    squez_1,
+    squez_2,
+    squez_3,
+    // squez_0
   ]),
   suu: load([
-    require('../assets/sfx/suu_1.ogg'),
-    require('../assets/sfx/suu_2.ogg'),
-    require('../assets/sfx/suu_3.ogg'),
-    // require('../assets/sfx/suu_0.mp3'),
+    suu_1,
+    suu_2,
+    suu_3,
+    // suu_0,
   ]),
   slide: load([
-    // require('../assets/sfx/slide_0.mp3'),
-    require('../assets/sfx/slide_1.ogg'),
+    slide_0,
+    // slide_1,
   ]),
   die: load([
-    require('../assets/sfx/die.ogg'),
+    die,
   ])
 }
 

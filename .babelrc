@@ -1,4 +1,12 @@
 {
-  "stage": 0,
-  "jsxPragma": "component"
+  "presets": ["env"],
+  "plugins": [
+    "transform-object-rest-spread",
+    [
+      "transform-react-jsx",
+      {
+        "pragma": "component"
+      }
+    ]
+  ]
 }

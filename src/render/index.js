@@ -1,6 +1,7 @@
+import circle from './circle'
+import component_ from './component'
 import img from './img'
 import rect from './rect'
-import circle from './circle'
 
 const x = 0
 const y = 1
@@ -43,4 +44,4 @@ export default function Render(state, ctx) {
   render(ops)(state)
 }
 
-export component from './component'
+export const component = component_
